@@ -1,0 +1,39 @@
+{{define "title"}}Dodaj novog vozača{{end}}
+
+{{define "main"}}
+<form action='/vozaci/dodaj_vozaca' method='POST'>
+    <div>
+        <label>Ime vozača:</label>
+        <input type='text' name='name' required>
+    </div>
+
+    <div>
+        <label>Broj dozvole:</label>
+        <input type='text' name='license_number' required>
+    </div>
+
+    <div>
+        <label>Broj telefona:</label>
+        <input type='tel' name='phone_number' required>
+    </div>
+
+    <div>
+        <label>Status:</label>
+        <input type='text' name='status' required>
+    </div>
+
+    <div>
+        <label>Prosečna potrošnja (L/100km):</label>
+        <input type='number' name='average_consumption' step='0.01' required>
+    </div>
+
+    <div>
+        <label>Pređeni kilometri:</label>
+        <input type='number' name='km_traveled' step='0.01' required>
+    </div>
+
+    <div>
+        <input type='submit' value='Dodaj vozača'>
+    </div>
+</form>
+{{end}}

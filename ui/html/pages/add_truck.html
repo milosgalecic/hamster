@@ -1,0 +1,34 @@
+{{define "title"}}Dodaj novi kamion{{end}}
+
+{{define "main"}}
+<form action='/kamioni/dodaj_kamion' method='POST'>
+    <div>
+        <label>Model kamiona:</label>
+        <input type='text' name='model' required>
+    </div>
+
+    <div>
+        <label>Registracija:</label>
+        <input type='text' name='license_plate' required>
+    </div>
+
+    <div>
+        <label>Status:</label>
+        <input type='text' name='status' required>
+    </div>
+
+    <div>
+        <label>Pređeni kilometri:</label>
+        <input type='number' name='km_traveled' step='0.01' required>
+    </div>
+
+    <div>
+        <label>Prosečna potrošnja (L/100km):</label>
+        <input type='number' name='average_consumption' step='0.01' required>
+    </div>
+
+    <div>
+        <input type='submit' value='Dodaj kamion'>
+    </div>
+</form>
+{{end}}

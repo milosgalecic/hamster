@@ -1,0 +1,35 @@
+{{define "title"}}Home{{end}}
+
+{{define "main"}}
+    <h2>Poslovi</h2>
+    <table>
+        <tr>
+            <th>ID Posla</th>
+            <th>Vozac</th>
+            <th>Kamion</th>
+            <th>Opis</th>
+            <th>Klijent</th>
+            <th>Vreme polaska</th>
+            <th>Mesto polaska</th>
+            <th>Vreme dolaska</th>
+            <th>Destinacija</th>
+
+        </tr>
+        {{if .JobDisplays}}
+            {{range .JobDisplays}} <!-- Loop over JobDisplays instead of Jobs -->
+            <tr>
+                <td><a href='/poslovi/info/{{.Job.ID}}'>{{.Job.ID}}</a></td>
+                <td><a href='/vozaci/info/{{.Job.Driver_id}}'>{{.DriverName}}</a></td> 
+                <td><a href='/kamioni/info/{{.Job.Truck_id}}'>{{.TruckLicensePlate}}</a></td> 
+                <td>{{.Job.Description}}</td>
+                <td>{{.Job.Client_name}}</td>
+                <td>{{.FormattedDate}}</td>
+                <td>{{.Job.Start_location}}</td>
+                <td>{{.FormattedArrival}}</td>
+                <td>{{.Job.Destination_location}}</td>
+                <td><a href='/poslovi/edit/{{.Job.ID}}'>Edit</a></td> 
+            </tr>
+            {{end}}
+        {{end}}
+    </table>
+{{end}}

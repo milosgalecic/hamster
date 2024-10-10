@@ -1,0 +1,71 @@
+{{define "title"}}Izmeni informacije o poslu{{end}}
+
+{{define "main"}}
+{{range .JobDisplays}}
+<form action='/poslovi/edit/{{.Job.ID}}' method='POST'>
+    <div>
+        <label>Opis posla:</label>
+        <input type='text' name='description' required value="{{.Job.Description}}">
+    </div>
+
+    <div>
+        <label>ID Vozača:</label>
+        <input type='number' name='driver_id' required value="{{.Job.Driver_id}}">
+    </div>
+
+    <div>
+        <label>ID Kamiona:</label>
+        <input type='number' name='truck_id' required value="{{.Job.Truck_id}}">
+    </div>
+
+    <div>
+        <label>Planirani datum:</label>
+        <input type='datetime-local' name='scheduled_date' required value="{{.Job.Scheduled_date}}">
+    </div>
+
+    <div>
+        <label>Planirano vreme dolaska:</label>
+        <input type='datetime-local' name='scheduled_arrival_time' value="{{.Job.Scheduled_arrival_time}}">
+    </div>
+
+    <div>
+        <label>Status:</label>
+        <input type='text' name='status' required value="{{.Job.Status}}">
+    </div>
+
+    <div>
+        <label>Udaljenost (km):</label>
+        <input type='number' name='distance' step='1' required value="{{.Job.Distance}}">
+    </div>
+
+    <div>
+        <label>Veličina paketa (kg):</label>
+        <input type='number' name='package_size' step='1' required value="{{.Job.Package_size}}">
+    </div>
+
+    <div>
+        <label>Ime klijenta:</label>
+        <input type='text' name='client_name' value="{{.Job.Client_name}}">
+    </div>
+
+    <div>
+        <label>Početna lokacija:</label>
+        <input type='text' name='start_location' value="{{.Job.Start_location}}">
+    </div>
+
+    <div>
+        <label>Lokacija dostave:</label>
+        <input type='text' name='destination_location' value="{{.Job.Destination_location}}">
+    </div>
+
+    <div>
+        <label>Težina paketa (kg):</label>
+        <input type='number' name='package_weight' step='1' value="{{.Job.Package_weight}}">
+    </div>
+
+    <div>
+        <input type='submit' value="Izmeni posao">
+    </div>
+</form>
+{{end}}
+{{end}}

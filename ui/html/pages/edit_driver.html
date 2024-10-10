@@ -1,0 +1,39 @@
+{{define "title"}}Izmeni vozača{{end}}
+
+{{define "main"}}
+<form action='/vozaci/edit/{{.Driver.ID}}' method='POST'>
+    <div>
+        <label>Ime vozača:</label>
+        <input type='text' name='name' required value="{{.Driver.Name}}">
+    </div>
+
+    <div>
+        <label>Broj dozvole:</label>
+        <input type='text' name='license_number' required value="{{.Driver.License_number}}">
+    </div>
+
+    <div>
+        <label>Broj telefona:</label>
+        <input type='tel' name='phone_number' required value="{{.Driver.Phone_number}}">
+    </div>
+
+    <div>
+        <label>Status:</label>
+        <input type='text' name='status' required value="{{.Driver.Status}}">
+    </div>
+
+    <div>
+        <label>Prosečna potrošnja (L/100km):</label>
+        <input type='number' name='average_consumption' step='0.01' required value="{{.Driver.Average_consumption}}">
+    </div>
+
+    <div>
+        <label>Pređeni kilometri:</label>
+        <input type='number' name='km_traveled' step='0.01' required value="{{.Driver.Km_traveled}}">
+    </div>
+
+    <div>
+        <input type='submit' value='Izmeni vozača'>
+    </div>
+</form>
+{{end}}

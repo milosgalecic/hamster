@@ -1,0 +1,69 @@
+{{define "title"}}Dodaj novi posao{{end}}
+
+{{define "main"}}
+<form action='/poslovi/dodaj_posao' method='POST'>
+    <div>
+        <label>Opis posla:</label>
+        <input type='text' name='description' required>
+    </div>
+
+    <div>
+        <label>ID Vozača:</label>
+        <input type='number' name='driver_id' required>
+    </div>
+
+    <div>
+        <label>ID Kamiona:</label>
+        <input type='number' name='truck_id' required>
+    </div>
+
+    <div>
+        <label>Planirani datum polaska:</label>
+        <input type='datetime-local' name='scheduled_date' required>
+    </div>
+
+    <div>
+        <label>Planirano vreme dolaska:</label>
+        <input type='datetime-local' name='scheduled_arrival_time'>
+    </div>
+
+    <div>
+        <label>Status:</label>
+        <input type='text' name='status' required>
+    </div>
+
+    <div>
+        <label>Udaljenost (km):</label>
+        <input type='number' name='distance' step='1' required>
+    </div>
+
+    <div>
+        <label>Veličina paketa (kg):</label>
+        <input type='number' name='package_size' step='1' required>
+    </div>
+
+    <div>
+        <label>Ime klijenta:</label>
+        <input type='text' name='client_name'>
+    </div>
+
+    <div>
+        <label>Početna lokacija:</label>
+        <input type='text' name='start_location'>
+    </div>
+
+    <div>
+        <label>Lokacija dostave:</label>
+        <input type='text' name='destination_location'>
+    </div>
+
+    <div>
+        <label>Težina paketa (kg):</label>
+        <input type='number' name='package_weight' step='1'>
+    </div>
+
+    <div>
+        <input type='submit' value='Dodaj posao'>
+    </div>
+</form>
+{{end}}

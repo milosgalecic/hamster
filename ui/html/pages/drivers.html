@@ -1,0 +1,29 @@
+{{define "title"}}Vozaci{{end}}
+
+{{define "main"}}
+    <h2>Vozaci</h2>
+    {{if .Drivers}}
+    <table>
+        <tr>
+            <th>Ime</th>
+            <th>Broj dozvole</th>
+            <th>Status</th>
+        </tr>
+        {{range .Drivers}}
+        <tr>
+            <td><a href='/vozaci/info/{{.ID}}'>{{.Name}}</a></td>
+            <td>{{.License_number}}</td>
+            <td>{{.Status}}</td>
+            <td><a href='/vozaci/edit/{{.ID}}'>Edit</a></td>
+        </tr>
+        {{end}}
+    </table>
+    {{else}}
+        <p>There's nothing to see here... yet!</p>
+    {{end}}
+    
+    <!-- Add a button to navigate to the add driver page -->
+    <div>
+        <a href="/vozaci/dodaj_vozaca" class="btn btn-primary">Dodaj Vozača</a>
+    </div>
+{{end}}

@@ -1,0 +1,27 @@
+{{define "title"}}Home{{end}}
+
+{{define "main"}}
+    <h2>Istorija poslova</h2>
+    {{if .Jobs}}
+    <table>
+        <tr>
+            <th>Posao</th>
+            <th>Vozac</th>
+            <th>Kamion</th>
+            <th>Opis</th>
+            <th>Polazak</th>
+        </tr>
+        {{range .Jobs}}
+        <tr>
+            <td><a href='/poslovi/info/{{.ID}}'>{{.ID}}</a></td>
+            <td><a href='/vozaci/info/{{.Driver_id}}'>{{.Driver_id}}</a></td>
+            <td><a href='/kamioni/info/{{.Truck_id}}'>{{.Truck_id}}</a></td>
+            <td>{{.Description}}</td>
+            <td>{{.Scheduled_date}}</td>
+        </tr>
+        {{end}}
+    </table>
+    {{else}}
+        <p>There's nothing to see here... yet!</p>
+    {{end}}
+{{end}}

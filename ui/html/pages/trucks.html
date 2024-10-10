@@ -1,0 +1,27 @@
+{{define "title"}}Home{{end}}
+
+{{define "main"}}
+    <h2>Kamioni</h2>
+    {{if .Trucks}}
+    <table>
+        <tr>
+            <th>Registracija</th>
+            <th>Model</th>
+            <th>Status</th>
+        </tr>
+        {{range .Trucks}}
+        <tr>
+            <td><a href='/kamioni/info/{{.ID}}'>{{.License_plate}}</a></td>
+            <td>{{.Model}}</a></td>
+            <td>{{.Status}}</a></td>
+            <td><a href='/kamioni/edit/{{.ID}}'>Edit</a></td>
+        </tr>
+        {{end}}
+    </table>
+    {{else}}
+        <p>There's nothing to see here... yet!</p>
+    {{end}}
+    <div>
+        <a href="/kamioni/dodaj_kamion" class="btn btn-primary">Dodaj kamion</a>
+    </div>
+{{end}}
