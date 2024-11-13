@@ -13,11 +13,15 @@ type JobDisplay struct {
 	FormattedDate     string
 	FormattedArrival  string
 	IsEdit            bool
+	DriverIdMap       map[int]string
+	TruckIdMap        map[int]string
 }
 
 // Nemam vise Job uvek vracam slice
 type templateData struct {
 	CurrentYear int
+	DriverIdMap map[int]string
+	TruckIdMap  map[int]string
 	Job         *models.Job
 	Jobs        []*models.Job
 	Driver      *models.Driver
@@ -25,6 +29,8 @@ type templateData struct {
 	Truck       *models.Truck
 	Trucks      []*models.Truck
 	JobDisplays []*JobDisplay
+	Form        any
+	Flash       string
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {

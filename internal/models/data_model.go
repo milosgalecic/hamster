@@ -9,6 +9,26 @@ import (
 	"time"
 )
 
+type JobStatus string
+
+const (
+	StatusActive    JobStatus = "active"
+	StatusPending   JobStatus = "pending"
+	StatusCompleted JobStatus = "completed"
+	StatusIssue     JobStatus = "issue"
+	StatusCanceled  JobStatus = "canceled"
+)
+
+type Status string
+
+const (
+	Occupied  Status = "ocupied"
+	Pending   Status = "pending"
+	Available Status = "аvailable"
+	Issue     Status = "issue"
+	Archived  Status = "аrchived"
+)
+
 type Job struct {
 	ID                     int       `db:"id"`
 	Description            string    `db:"description"`
@@ -16,7 +36,7 @@ type Job struct {
 	Truck_id               int       `db:"truck_id"`
 	Scheduled_date         time.Time `db:"scheduled_date"`
 	Created                time.Time `db:"created_at"`
-	Status                 string    `db:"status"`
+	Status                 JobStatus `db:"status"`
 	Distance               float64   `db:"distance"`
 	Package_size           float64   `db:"package_size"`
 	Scheduled_arrival_time time.Time `db:"scheduled_arrival_time"`
@@ -32,7 +52,7 @@ type Driver struct {
 	License_number      string    `db:"license_number"`
 	Phone_number        string    `db:"phone_number"`
 	Created             time.Time `db:"created_at"`
-	Status              string    `db:"status"`
+	Status              Status    `db:"status"`
 	Average_consumption float64   `db:"average_consumption"`
 	Km_traveled         float64   `db:"km_traveled"`
 	Active              bool      `db:"active"`
@@ -43,7 +63,7 @@ type Truck struct {
 	Model               string    `db:"model"`
 	License_plate       string    `db:"license_plate"`
 	Created             time.Time `db:"created_at"`
-	Status              string    `db:"status"`
+	Status              Status    `db:"status"`
 	Km_traveled         float64   `db:"km_traveled"`
 	Average_consumption float64   `db:"average_consumption"`
 	Active              bool      `db:"active"`
@@ -67,8 +87,8 @@ func (m *DbModel) Insert(table_name string, data interface{}) (int, error) {
 		field := typ.Field(i)
 		columnName := field.Tag.Get("db") // Use struct tags for DB column names
 
-		// Skip ID and Created fields
-		if columnName == "id" || columnName == "created_at" {
+		// Skip ID, Created and Status fields
+		if columnName == "id" || columnName == "created_at" || columnName == "status" {
 			continue
 		}
 

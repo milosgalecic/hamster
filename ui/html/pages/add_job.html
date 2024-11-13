@@ -1,69 +1,75 @@
-{{define "title"}}Dodaj novi posao{{end}}
+{{define "title"}}Add new job{{end}}
 
 {{define "main"}}
 <form action='/poslovi/dodaj_posao' method='POST'>
     <div>
-        <label>Opis posla:</label>
-        <input type='text' name='description' required>
+        <label>Description:</label>
+        {{with .Form.FieldErrors.description}}
+            <label class='error'>{{.}}</label>
+        {{end}}
+        <input type='text' name='description' value='{{.Form.Job.Description}}' required>
     </div>
 
     <div>
-        <label>ID Vozača:</label>
-        <input type='number' name='driver_id' required>
+        <label for="driver_id">Driver:</label>
+        <select name="driver_id" id="driver_id" required>
+            {{range $id, $name := .Form.DriverIdMap}}
+                <option value="{{$id}}">{{$name}}</option>
+            {{end}}
+        </select>
+    </div>
+    
+    <div>
+        <label for="truck_id">Truck:</label>
+        <select name="truck_id" id="truck_id" required>
+            {{range $id, $licensePlate := .Form.TruckIdMap}}
+                <option value="{{$id}}">{{$licensePlate}}</option>
+            {{end}}
+        </select>
     </div>
 
     <div>
-        <label>ID Kamiona:</label>
-        <input type='number' name='truck_id' required>
-    </div>
-
-    <div>
-        <label>Planirani datum polaska:</label>
+        <label>Scheduled departure date:</label>
         <input type='datetime-local' name='scheduled_date' required>
     </div>
 
     <div>
-        <label>Planirano vreme dolaska:</label>
-        <input type='datetime-local' name='scheduled_arrival_time'>
+        <label>Scheduled arrival date:</label>
+        <input type='datetime-local' name='scheduled_arrival_time' required>
     </div>
 
     <div>
-        <label>Status:</label>
-        <input type='text' name='status' required>
-    </div>
-
-    <div>
-        <label>Udaljenost (km):</label>
+        <label>Distance(km):</label>
         <input type='number' name='distance' step='1' required>
     </div>
 
     <div>
-        <label>Veličina paketa (kg):</label>
+        <label>Package size(m):</label>
         <input type='number' name='package_size' step='1' required>
     </div>
 
     <div>
-        <label>Ime klijenta:</label>
-        <input type='text' name='client_name'>
+        <label>Package weight(kg):</label>
+        <input type='number' name='package_weight' step='1' required>
     </div>
 
     <div>
-        <label>Početna lokacija:</label>
-        <input type='text' name='start_location'>
+        <label>Client:</label>
+        <input type='text' name='client_name' required>
     </div>
 
     <div>
-        <label>Lokacija dostave:</label>
-        <input type='text' name='destination_location'>
+        <label>Departure location:</label>
+        <input type='text' name='start_location' required>
     </div>
 
     <div>
-        <label>Težina paketa (kg):</label>
-        <input type='number' name='package_weight' step='1'>
+        <label>Destiantion:</label>
+        <input type='text' name='destination_location' required>
     </div>
 
     <div>
-        <input type='submit' value='Dodaj posao'>
+        <input type='submit' value='Add job' required>
     </div>
 </form>
 {{end}}

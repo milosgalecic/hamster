@@ -3,21 +3,27 @@ package main
 import (
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
 
 	"hamster/internal/models"
+	"hamster/internal/validator"
 
 	"github.com/julienschmidt/httprouter"
 )
+
+type jobsCreateForm struct {
+	Job         models.Job
+	DriverIdMap map[int]string
+	TruckIdMap  map[int]string
+	validator.Validator
+}
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	var jobs []*models.Job
 	var drivers []*models.Driver
 	var trucks []*models.Truck
-	log.Printf("Sta je jobs ako init bez icega :%s", jobs)
 
 	params := map[string]any{
 		"status": "active",
@@ -69,9 +75,9 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) drivers(w http.ResponseWriter, r *http.Request) {
 
-	params := map[string]any{}
 	var drivers []*models.Driver
 
+	params := map[string]any{}
 	err := app.data.Get("drivers", &drivers, params)
 	if err != nil {
 		app.serverError(w, err)
@@ -144,13 +150,49 @@ func (app *application) jobs(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
+	flash := app.sessionManager.PopString(r.Context(), "flash")
+
 	app.render(w, http.StatusOK, "home.html", &templateData{
 		JobDisplays: jobDisplays,
+		Flash:       flash,
 	})
 }
 
 func (app *application) add_job(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
+
+	var drivers []*models.Driver
+	var trucks []*models.Truck
+
+	params := map[string]any{}
+
+	err := app.data.Get("drivers", &drivers, params)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	err = app.data.Get("trucks", &trucks, params)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	driverMap := make(map[int]string)
+	for _, driver := range drivers {
+		driverMap[driver.ID] = driver.Name
+	}
+
+	truckMap := make(map[int]string)
+	for _, truck := range trucks {
+		truckMap[truck.ID] = truck.License_plate
+	}
+	data.Form = jobsCreateForm{
+		Job: models.Job{
+			Description: "Unesite opis posla",
+		},
+		DriverIdMap: driverMap,
+		TruckIdMap:  truckMap,
+	}
 	app.render(w, http.StatusOK, "add_job.html", data)
 }
 
@@ -162,18 +204,48 @@ func (app *application) add_job_post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	description := r.PostForm.Get("description")
-	driver_id, err := strconv.Atoi(r.PostForm.Get("driver_id"))
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	truck_id, err := strconv.Atoi(r.PostForm.Get("truck_id"))
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
+	driver_id_str := r.PostForm.Get("driver_id")
+	truck_id_str := r.PostForm.Get("truck_id")
+	scheduledDateStr := r.PostForm.Get("scheduled_date")
+	scheduledArrivalDateStr := r.PostForm.Get("scheduled_arrival_time")
+	distance_str := r.PostForm.Get("distance")
+	package_size_str := r.PostForm.Get("package_size")
+	package_weight_str := r.PostForm.Get("package_weight")
+	client_name := r.PostForm.Get("client_name")
+	start_location := r.PostForm.Get("start_location")
+	destination_location := r.PostForm.Get("destination_location")
+
+	form := jobsCreateForm{}
+
+	form.CheckField(validator.NotBlank(description), "description", "Ne sme biti prazno")
+	form.CheckField(validator.MaxChars(description, 200), "description", "Ne sme biti vise od 200 karaktera")
+	form.CheckField(validator.NotBlank(driver_id_str), "driver_id", "Ne sme biti prazno")
+	form.CheckField(validator.NotBlank(truck_id_str), "truck_id", "Ne sme biti prazno")
+	form.CheckField(validator.NotBlank(scheduledDateStr), "scheduled_date", "Ne sme biti prazno")
+	form.CheckField(validator.NotBlank(scheduledArrivalDateStr), "scheduled_arrival_time", "Ne sme biti prazno")
+	form.CheckField(validator.NotBlank(distance_str), "distance", "Ne sme biti prazno")
+	form.CheckField(validator.NotBlank(package_size_str), "package_size", "Ne sme biti prazno")
+	form.CheckField(validator.NotBlank(client_name), "client_name", "Ne sme biti prazno")
+	form.CheckField(validator.NotBlank(start_location), "start_location", "Ne sme biti prazno")
+	form.CheckField(validator.NotBlank(destination_location), "destination_location", "Ne sme biti prazno")
+	form.CheckField(validator.NotBlank(package_weight_str), "package_weight", "Ne sme biti prazno")
+
+	if !form.Valid() {
+		data := app.newTemplateData(r)
+		data.Form = form
+		app.render(w, http.StatusUnprocessableEntity, "add_job.html", data)
 	}
 
-	scheduledDateStr := r.PostForm.Get("scheduled_date")
+	driver_id, err := strconv.Atoi(driver_id_str)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	truck_id, err := strconv.Atoi(truck_id_str)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
 
 	// Parse the date in the format expected by the 'datetime-local' HTML input type
 	scheduled_date, err := time.Parse("2006-01-02T15:04", scheduledDateStr)
@@ -181,26 +253,40 @@ func (app *application) add_job_post(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	status := r.PostForm.Get("status")
-	distance, err := strconv.ParseFloat(r.PostForm.Get("distance"), 64)
+	scheduled_arrival_time, err := time.Parse("2006-01-02T15:04", scheduledArrivalDateStr)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	package_size, err := strconv.ParseFloat(r.PostForm.Get("package_size"), 64)
+
+	distance, err := strconv.ParseFloat(distance_str, 64)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	package_size, err := strconv.ParseFloat(package_size_str, 64)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	package_weight, err := strconv.ParseFloat(package_weight_str, 64)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
 
 	job := models.Job{
-		Description:    description,
-		Driver_id:      driver_id,
-		Truck_id:       truck_id,
-		Scheduled_date: scheduled_date,
-		Status:         status,
-		Distance:       distance,
-		Package_size:   package_size,
+		Description:            description,
+		Driver_id:              driver_id,
+		Truck_id:               truck_id,
+		Scheduled_date:         scheduled_date,
+		Scheduled_arrival_time: scheduled_arrival_time,
+		Distance:               distance,
+		Package_size:           package_size,
+		Client_name:            client_name,
+		Start_location:         start_location,
+		Destination_location:   destination_location,
+		Package_weight:         package_weight,
 	}
 
 	id, err := app.data.Insert("jobs", job)
@@ -208,6 +294,8 @@ func (app *application) add_job_post(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+
+	app.sessionManager.Put(r.Context(), "flash", "Posao uspesno dodat!")
 
 	http.Redirect(w, r, fmt.Sprintf("/poslovi/info/%d", id), http.StatusSeeOther)
 }
@@ -227,7 +315,6 @@ func (app *application) add_driver_post(w http.ResponseWriter, r *http.Request) 
 	name := r.PostForm.Get("name")
 	licenseNumber := r.PostForm.Get("license_number")
 	phoneNumber := r.PostForm.Get("phone_number")
-	status := r.PostForm.Get("status")
 
 	averageConsumption, err := strconv.ParseFloat(r.PostForm.Get("average_consumption"), 64)
 	if err != nil {
@@ -245,7 +332,7 @@ func (app *application) add_driver_post(w http.ResponseWriter, r *http.Request) 
 		Name:                name,
 		License_number:      licenseNumber,
 		Phone_number:        phoneNumber,
-		Status:              status,
+		Status:              models.Available,
 		Average_consumption: averageConsumption,
 		Km_traveled:         kmTraveled,
 	}
@@ -275,7 +362,6 @@ func (app *application) add_truck_post(w http.ResponseWriter, r *http.Request) {
 
 	model := r.PostForm.Get("model")
 	licensePlate := r.PostForm.Get("license_plate")
-	status := r.PostForm.Get("status")
 
 	kmTraveled, err := strconv.ParseFloat(r.PostForm.Get("km_traveled"), 64)
 	if err != nil {
@@ -292,7 +378,7 @@ func (app *application) add_truck_post(w http.ResponseWriter, r *http.Request) {
 	truck := models.Truck{
 		Model:               model,
 		License_plate:       licensePlate,
-		Status:              status,
+		Status:              models.Available,
 		Km_traveled:         kmTraveled,
 		Average_consumption: averageConsumption,
 	}
@@ -443,6 +529,8 @@ func (app *application) edit_job(w http.ResponseWriter, r *http.Request) {
 			FormattedDate:     job.Scheduled_date.Format("2006-01-02 15:04"),
 			FormattedArrival:  job.Scheduled_arrival_time.Format("2006-01-02 15:04"),
 			IsEdit:            true,
+			TruckIdMap:        truckMap,
+			DriverIdMap:       driverMap,
 		})
 	}
 
@@ -491,7 +579,7 @@ func (app *application) edit_job_post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	status := r.PostForm.Get("status")
+	status := models.JobStatus(r.PostForm.Get("status"))
 	distance, err := strconv.ParseFloat(r.PostForm.Get("distance"), 64)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
@@ -584,7 +672,7 @@ func (app *application) edit_truck_post(w http.ResponseWriter, r *http.Request) 
 
 	model := r.PostForm.Get("model")
 	license_plate := r.PostForm.Get("license_plate")
-	status := r.PostForm.Get("status")
+	status := models.Status(r.PostForm.Get("status"))
 
 	km_traveled, err := strconv.ParseFloat(r.PostForm.Get("km_traveled"), 64)
 	if err != nil {
@@ -662,7 +750,7 @@ func (app *application) edit_driver_post(w http.ResponseWriter, r *http.Request)
 	name := r.PostForm.Get("name")
 	license_number := r.PostForm.Get("license_number")
 	phone_number := r.PostForm.Get("phone_number")
-	status := r.PostForm.Get("status")
+	status := models.Status(r.PostForm.Get("status"))
 
 	km_traveled, err := strconv.ParseFloat(r.PostForm.Get("km_traveled"), 64)
 	if err != nil {

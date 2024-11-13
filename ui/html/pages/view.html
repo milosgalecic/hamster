@@ -4,107 +4,110 @@
 
 <div class="data-container">
     {{if .Jobs}}
-        <h2>Detalji posla</h2>
+        <h2>Job details</h2>
         <div class="job-container">
             <!-- Loop through multiple jobs -->
             {{range .Jobs}}
                 <div class="job">
                     <div class="metadata">
-                        <strong>Opis posla:</strong>
+                        <strong>Job ID:</strong>
+                        <p>#{{.ID}}</p>
+                        
+                        <strong>Description:</strong>
                         <p>{{.Description}}</p>
 
-                        <strong>Broj posla:</strong>
-                        <p>#{{.ID}}</p>
-
-                        <strong>Vozač ID:</strong>
+                        <strong>Driver:</strong>
                         <p>{{.Driver_id}}</p>
 
-                        <strong>Kamion ID:</strong>
+                        <strong>Truck:</strong>
                         <p>{{.Truck_id}}</p>
 
-                        <strong>Planirani datum:</strong>
+                        <strong>Scheduled departure date:</strong>
                         <p>{{.Scheduled_date}}</p>
 
-                        <strong>Planirano vreme dolaska:</strong>
+                        <strong>Scheduled arrival date:</strong>
                         <p>{{.Scheduled_arrival_time}}</p>
 
                         <strong>Status:</strong>
                         <p>{{.Status}}</p>
 
-                        <strong>Udaljenost (km):</strong>
+                        <strong>Distance(km):</strong>
                         <p>{{.Distance}}</p>
 
-                        <strong>Veličina paketa (kg):</strong>
+                        <strong>Package size(m):</strong>
                         <p>{{.Package_size}}</p>
 
-                        <strong>Težina paketa (kg):</strong>
+                        <strong>Package weight(kg):</strong>
                         <p>{{.Package_weight}}</p>
 
-                        <strong>Ime klijenta:</strong>
+                        <strong>Client:</strong>
                         <p>{{.Client_name}}</p>
 
-                        <strong>Početna lokacija:</strong>
+                        <strong>Departure location:</strong>
                         <p>{{.Start_location}}</p>
 
-                        <strong>Destinacija:</strong>
+                        <strong>Destination:</strong>
                         <p>{{.Destination_location}}</p>
 
-                        <p><a href='/poslovi/edit/{{.ID}}'>Promeni</a></p>
+                        <p><a href='/poslovi/edit/{{.ID}}'>Change</a></p>
                     </div>
                 </div>
             {{end}}
         </div>
     {{else if .Drivers}}
-        <h2>Detalji o vozacu</h2>
+        <h2>Driver details</h2>
         <div class="driver-container">
             <!-- Loop through multiple drivers -->
             {{range .Drivers}}
                 <div class="driver">
                     <div class="metadata">
-                        <strong>Ime:</strong>
+                        <strong>Name:</strong>
                         <p>{{.Name}}</p>
 
-                        <strong>Broj vozača:</strong>
+                        <strong>Driver ID:</strong>
                         <p>#{{.ID}}</p>
 
-                        <strong>Broj licence:</strong>
+                        <strong>License number:</strong>
                         <p>{{.License_number}}</p>
 
-                        <strong>Telefon:</strong>
+                        <strong>Phone number:</strong>
                         <p>{{.Phone_number}}</p>
 
                         <strong>Status:</strong>
                         <p>{{.Status}}</p>
 
-                        <strong>Prosječna potrošnja (L/100km):</strong>
+                        <strong>Average consumption(L/100km):</strong>
                         <p>{{.Average_consumption}}</p>
 
-                        <strong>Km putovano:</strong>
+                        <strong>Traveled distance(km):</strong>
                         <p>{{.Km_traveled}}</p>
                     </div>
                 </div>
             {{end}}
         </div>
     {{else if .Trucks}}
-        <h2>Detalji o kamionu</h2>
+        <h2>Truck details</h2>
         <div class="truck-container">
             <!-- Loop through multiple trucks -->
             {{range .Trucks}}
                 <div class="truck">
                     <div class="metadata">
+                        <strong>Truck ID:</strong>
+                        <p>{{.ID}}</p>
+
                         <strong>Model:</strong>
                         <p>{{.Model}}</p>
 
-                        <strong>Registracija:</strong>
+                        <strong>License plate:</strong>
                         <p>{{.License_plate}}</p>
 
                         <strong>Status:</strong>
                         <p>{{.Status}}</p>
 
-                        <strong>Km putovano:</strong>
+                        <strong>Traveled distance(km):</strong>
                         <p>{{.Km_traveled}}</p>
 
-                        <strong>Prosječna potrošnja (L/100km):</strong>
+                        <strong>Average consumption(L/100km):</strong>
                         <p>{{.Average_consumption}}</p>
                     </div>
                 </div>

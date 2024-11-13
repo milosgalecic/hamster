@@ -1,15 +1,15 @@
 {{define "title"}}Home{{end}}
 
 {{define "main"}}
-    <h2>Istorija poslova</h2>
+    <h2>Job history</h2>
     {{if .Jobs}}
     <table>
         <tr>
-            <th>Posao</th>
-            <th>Vozac</th>
-            <th>Kamion</th>
-            <th>Opis</th>
-            <th>Polazak</th>
+            <th>Job</th>
+            <th>Driver</th>
+            <th>Truck</th>
+            <th>Description</th>
+            <th>Departure</th>
         </tr>
         {{range .Jobs}}
         <tr>

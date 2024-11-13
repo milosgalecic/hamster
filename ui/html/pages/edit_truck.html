@@ -1,34 +1,40 @@
-{{define "title"}}Dodaj novi kamion{{end}}
+{{define "title"}}Add new truck{{end}}
 
 {{define "main"}}
 <form action='/kamioni/edit/{{.Truck.ID}}' method='POST'>
     <div>
-        <label>Model kamiona:</label>
+        <label>Model:</label>
         <input type='text' name='model' required value="{{.Truck.Model}}">
     </div>
 
     <div>
-        <label>Registracija:</label>
+        <label>License plate:</label>
         <input type='text' name='license_plate' required value="{{.Truck.License_plate}}">
     </div>
 
     <div>
-        <label>Status:</label>
-        <input type='text' name='status' required value="{{.Truck.Status}}">
+        <label for="status">Status:</label>
+        <select name="status" id="status">
+            <option value="ocupied" {{if eq .Truck.Status "ccupied"}}selected{{end}}>Ocupied</option>
+            <option value="pending" {{if eq .Truck.Status "pending"}}selected{{end}}>Pending</option>
+            <option value="аvailable" {{if eq .Truck.Status "аvailable"}}selected{{end}}>Available</option>
+            <option value="issue" {{if eq .Truck.Status "issue"}}selected{{end}}>Issue</option>
+            <option value="аrchived" {{if eq .Truck.Status "аrchived"}}selected{{end}}>Archived</option>
+        </select>
     </div>
 
     <div>
-        <label>Pređeni kilometri:</label>
+        <label>Distance traveled(km):</label>
         <input type='number' name='km_traveled' step='0.01' required value="{{.Truck.Km_traveled}}">
     </div>
 
     <div>
-        <label>Prosečna potrošnja (L/100km):</label>
+        <label>Average consumption(L/100km):</label>
         <input type='number' name='average_consumption' step='0.01' required value="{{.Truck.Average_consumption}}">
     </div>
 
     <div>
-        <input type='submit' value='Primeni promenu'>
+        <input type='submit' value='Apply'>
     </div>
 </form>
 {{end}}

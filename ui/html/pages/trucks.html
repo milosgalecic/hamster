@@ -1,11 +1,11 @@
 {{define "title"}}Home{{end}}
 
 {{define "main"}}
-    <h2>Kamioni</h2>
+    <h2>Trucks</h2>
     {{if .Trucks}}
     <table>
         <tr>
-            <th>Registracija</th>
+            <th>License plate</th>
             <th>Model</th>
             <th>Status</th>
         </tr>
@@ -22,6 +22,6 @@
         <p>There's nothing to see here... yet!</p>
     {{end}}
     <div>
-        <a href="/kamioni/dodaj_kamion" class="btn btn-primary">Dodaj kamion</a>
+        <a href="/kamioni/dodaj_kamion" class="btn btn-primary">Add truck</a>
     </div>
 {{end}}

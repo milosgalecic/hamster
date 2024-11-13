@@ -1,12 +1,12 @@
 {{define "title"}}Vozaci{{end}}
 
 {{define "main"}}
-    <h2>Vozaci</h2>
+    <h2>Drivers</h2>
     {{if .Drivers}}
     <table>
         <tr>
-            <th>Ime</th>
-            <th>Broj dozvole</th>
+            <th>Name</th>
+            <th>License number</th>
             <th>Status</th>
         </tr>
         {{range .Drivers}}
@@ -24,6 +24,6 @@
     
     <!-- Add a button to navigate to the add driver page -->
     <div>
-        <a href="/vozaci/dodaj_vozaca" class="btn btn-primary">Dodaj Vozača</a>
+        <a href="/vozaci/dodaj_vozaca" class="btn btn-primary">Add driver</a>
     </div>
 {{end}}

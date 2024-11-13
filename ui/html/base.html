@@ -22,10 +22,13 @@
     {{template "nav" .}}
 
     <main>
+        {{with .Flash}}
+            <div class='flash'>{{.}}</div>
+        {{end}}
         {{template "main" .}}
     </main>
     <!-- Invoke the navigation template -->
-    <footer>Powered by <a href='https://golang.org/'>Go</a></footer>
+    <footer>Powered by <a href='https://golang.org/'>Gale</a></footer>
     <script src="/static/js/main.js" type="text/javascript"></script>
 </body>
 
