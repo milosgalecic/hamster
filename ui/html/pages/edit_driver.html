@@ -20,22 +20,12 @@
     <div>
         <label for="status">Status:</label>
         <select name="status" id="status">
-            <option value="ocupied" {{if eq .Driver.Status "ccupied"}}selected{{end}}>Ocupied</option>
+            <option value="occupied" {{if eq .Driver.Status "occupied"}}selected{{end}}>Occupied</option>
             <option value="pending" {{if eq .Driver.Status "pending"}}selected{{end}}>Pending</option>
-            <option value="аvailable" {{if eq .Driver.Status "аvailable"}}selected{{end}}>Available</option>
+            <option value="available" {{if eq .Driver.Status "available"}}selected{{end}}>Available</option>
             <option value="issue" {{if eq .Driver.Status "issue"}}selected{{end}}>Issue</option>
             <option value="аrchived" {{if eq .Driver.Status "аrchived"}}selected{{end}}>Archived</option>
         </select>
-    </div>
-
-    <div>
-        <label>Average consumption(L/100km):</label>
-        <input type='number' name='average_consumption' step='0.01' required value="{{.Driver.Average_consumption}}">
-    </div>
-
-    <div>
-        <label>Distance traveled(km):</label>
-        <input type='number' name='km_traveled' step='0.01' required value="{{.Driver.Km_traveled}}">
     </div>
 
     <div>

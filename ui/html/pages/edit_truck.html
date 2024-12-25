@@ -13,24 +13,19 @@
     </div>
 
     <div>
+        <label>License plate:</label>
+        <input type='text' name='license_plate' required value="{{.Truck.Status}}">
+    </div>
+
+    <div>
         <label for="status">Status:</label>
         <select name="status" id="status">
-            <option value="ocupied" {{if eq .Truck.Status "ccupied"}}selected{{end}}>Ocupied</option>
+            <option value="occupied" {{if eq .Truck.Status "occupied"}}selected{{end}}>Occupied</option>
             <option value="pending" {{if eq .Truck.Status "pending"}}selected{{end}}>Pending</option>
-            <option value="аvailable" {{if eq .Truck.Status "аvailable"}}selected{{end}}>Available</option>
+            <option value="available" {{if eq .Truck.Status "available"}}selected{{end}}>Available</option>
             <option value="issue" {{if eq .Truck.Status "issue"}}selected{{end}}>Issue</option>
             <option value="аrchived" {{if eq .Truck.Status "аrchived"}}selected{{end}}>Archived</option>
         </select>
-    </div>
-
-    <div>
-        <label>Distance traveled(km):</label>
-        <input type='number' name='km_traveled' step='0.01' required value="{{.Truck.Km_traveled}}">
-    </div>
-
-    <div>
-        <label>Average consumption(L/100km):</label>
-        <input type='number' name='average_consumption' step='0.01' required value="{{.Truck.Average_consumption}}">
     </div>
 
     <div>

@@ -1,0 +1,51 @@
+{{define "title"}}FinishJob{{end}}
+
+{{define "main"}}
+{{range .JobDisplays}}
+<form action='/poslovi/zavrsi/{{.Job.ID}}' method='POST'>
+
+    <div class="metadata">
+        <strong>Job ID:</strong>
+        <p>#{{.Job.ID}}</p>
+        
+        <strong>Description:</strong>
+        <p>{{.Job.Description}}</p>
+
+        <strong>Driver:</strong>
+        <p>{{.DriverName}}</p>
+
+        <strong>Truck:</strong>
+        <p>{{.TruckLicensePlate}}</p>
+    </div>
+
+    <div>
+        <label>Job completion date:</label>
+        <input type='datetime-local' name='end_date' value="{{.FormattedArrival}}">
+    </div>
+
+    <div>
+        <label>Truck ending km:</label>
+        <input type='number' name='ending_km' step='1' required value="{{.Job.TruckEndKm}}">
+    </div>
+
+    <div>
+        <label>Fuel spent(l):</label>
+        <input type='number' name='fuel_spent' step='1' required value="{{.Job.Fuel_spent}}">
+    </div>
+
+    <div>
+        <label>Expenses:</label>
+        <input type='number' name='expenses' step='1' required value="{{.Job.Expenses}}">
+    </div>
+
+    <div>
+        <label>Revenue:</label>
+        <input type='number' name='revenue' step='1' required value="{{.Job.Revenue}}">
+    </div>
+
+    <div>
+        <input type='submit' value="Complete Job">
+    </div>
+</form>
+{{end}}
+{{end}}

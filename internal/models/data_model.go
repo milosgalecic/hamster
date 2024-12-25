@@ -30,43 +30,36 @@ const (
 )
 
 type Job struct {
-	ID                     int       `db:"id"`
-	Description            string    `db:"description"`
-	Driver_id              int       `db:"driver_id"`
-	Truck_id               int       `db:"truck_id"`
-	Scheduled_date         time.Time `db:"scheduled_date"`
-	Created                time.Time `db:"created_at"`
-	Status                 JobStatus `db:"status"`
-	Distance               float64   `db:"distance"`
-	Package_size           float64   `db:"package_size"`
-	Scheduled_arrival_time time.Time `db:"scheduled_arrival_time"`
-	Client_name            string    `db:"client_name"`
-	Start_location         string    `db:"start_location"`
-	Destination_location   string    `db:"destination_location"`
-	Package_weight         float64   `db:"package_weight"`
+	ID           int       `db:"id"`
+	Description  string    `db:"description"`
+	StartDate    time.Time `db:"start_date"`
+	EndDate      time.Time `db:"end_date"`
+	Driver_id    int       `db:"driver_id"`
+	Truck_id     int       `db:"truck_id"`
+	Status       JobStatus `db:"status"`
+	TruckStartKm float64   `db:"starting_km"`
+	TruckEndKm   float64   `db:"ending_km"`
+	Fuel_spent   float64   `db:"fuel_spent"`
+	Expenses     float64   `db:"expenses"`
+	Revenue      float64   `db:"revenue"`
+	CreatedAt    time.Time `db:"created_at"`
 }
 
 type Driver struct {
-	ID                  int       `db:"id"`
-	Name                string    `db:"name"`
-	License_number      string    `db:"license_number"`
-	Phone_number        string    `db:"phone_number"`
-	Created             time.Time `db:"created_at"`
-	Status              Status    `db:"status"`
-	Average_consumption float64   `db:"average_consumption"`
-	Km_traveled         float64   `db:"km_traveled"`
-	Active              bool      `db:"active"`
+	ID             int       `db:"id"`
+	Name           string    `db:"name"`
+	License_number string    `db:"license_number"`
+	Phone_number   string    `db:"phone_number"`
+	Created        time.Time `db:"created_at"`
+	Status         Status    `db:"status"`
 }
 
 type Truck struct {
-	ID                  int       `db:"id"`
-	Model               string    `db:"model"`
-	License_plate       string    `db:"license_plate"`
-	Created             time.Time `db:"created_at"`
-	Status              Status    `db:"status"`
-	Km_traveled         float64   `db:"km_traveled"`
-	Average_consumption float64   `db:"average_consumption"`
-	Active              bool      `db:"active"`
+	ID            int       `db:"id"`
+	Model         string    `db:"model"`
+	License_plate string    `db:"license_plate"`
+	Created       time.Time `db:"created_at"`
+	Status        Status    `db:"status"`
 }
 
 type DbModel struct {
@@ -215,31 +208,43 @@ func (m *DbModel) Update(tableName string, id int, data interface{}) error {
 		field := typ.Field(i)
 		columnName := field.Tag.Get("db")
 
-		if columnName == "id" || columnName == "created_at" {
+		// Skip fields with no 'db' tag or invalid fields
+		if columnName == "" {
 			continue
 		}
 
-		if columnName == "" {
-			columnName = field.Name
+		// Skip fields with zero values (not explicitly set)
+		fieldValue := val.Field(i).Interface()
+		if isZero(fieldValue) {
+			continue
 		}
 
+		// Add column name and value to the query
 		setClauses = append(setClauses, fmt.Sprintf("%s = ?", columnName))
-		values = append(values, val.Field(i).Interface())
+		values = append(values, fieldValue)
 	}
 
+	// If no fields are set, return an error
+	if len(setClauses) == 0 {
+		return fmt.Errorf("no fields to update")
+	}
+
+	// Construct the query
 	query := fmt.Sprintf(
 		"UPDATE %s SET %s WHERE id = ?",
 		tableName,
 		strings.Join(setClauses, ", "),
 	)
 
+	// Add the ID to the end of the values slice
+	values = append(values, id)
+
+	// Prepare and execute the query
 	stmt, err := m.DB.Prepare(query)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-
-	values = append(values, id)
 
 	_, err = stmt.Exec(values...)
 	if err != nil {
@@ -247,4 +252,7 @@ func (m *DbModel) Update(tableName string, id int, data interface{}) error {
 	}
 
 	return nil
+}
+func isZero(value interface{}) bool {
+	return reflect.DeepEqual(value, reflect.Zero(reflect.TypeOf(value)).Interface())
 }

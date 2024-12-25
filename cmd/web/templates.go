@@ -19,18 +19,19 @@ type JobDisplay struct {
 
 // Nemam vise Job uvek vracam slice
 type templateData struct {
-	CurrentYear int
-	DriverIdMap map[int]string
-	TruckIdMap  map[int]string
-	Job         *models.Job
-	Jobs        []*models.Job
-	Driver      *models.Driver
-	Drivers     []*models.Driver
-	Truck       *models.Truck
-	Trucks      []*models.Truck
-	JobDisplays []*JobDisplay
-	Form        any
-	Flash       string
+	CurrentYear     int
+	DriverIdMap     map[int]string
+	TruckIdMap      map[int]string
+	Job             *models.Job
+	Jobs            []*models.Job
+	Driver          *models.Driver
+	Drivers         []*models.Driver
+	Truck           *models.Truck
+	Trucks          []*models.Truck
+	JobDisplays     []*JobDisplay
+	Form            any
+	Flash           string
+	IsAuthenticated bool
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {

@@ -10,46 +10,37 @@
             {{range .Jobs}}
                 <div class="job">
                     <div class="metadata">
-                        <strong>Job ID:</strong>
+                        <strong>ID:</strong>
                         <p>#{{.ID}}</p>
                         
                         <strong>Description:</strong>
                         <p>{{.Description}}</p>
 
                         <strong>Driver:</strong>
-                        <p>{{.Driver_id}}</p>
+                        <p>#{{.Driver_id}}</p>
 
                         <strong>Truck:</strong>
                         <p>{{.Truck_id}}</p>
 
-                        <strong>Scheduled departure date:</strong>
-                        <p>{{.Scheduled_date}}</p>
+                        <strong>Departure date:</strong>
+                        <p>{{.StartDate}}</p>
 
-                        <strong>Scheduled arrival date:</strong>
-                        <p>{{.Scheduled_arrival_time}}</p>
+                        <strong>Arrival date:</strong>
+                        <p>{{.EndDate}}</p>
 
-                        <strong>Status:</strong>
-                        <p>{{.Status}}</p>
+                        <strong>Truck staring km:</strong>
+                        <p>{{.TruckStartKm}}</p>
 
-                        <strong>Distance(km):</strong>
-                        <p>{{.Distance}}</p>
+                        <strong>Truck ending km:</strong>
+                        <p>{{.TruckEndKm}}</p>
 
-                        <strong>Package size(m):</strong>
-                        <p>{{.Package_size}}</p>
+                        <strong>Expenses:</strong>
+                        <p>{{.Expenses}}</p>
 
-                        <strong>Package weight(kg):</strong>
-                        <p>{{.Package_weight}}</p>
+                        <strong>Revenue:</strong>
+                        <p>{{.Revenue}}</p>
 
-                        <strong>Client:</strong>
-                        <p>{{.Client_name}}</p>
-
-                        <strong>Departure location:</strong>
-                        <p>{{.Start_location}}</p>
-
-                        <strong>Destination:</strong>
-                        <p>{{.Destination_location}}</p>
-
-                        <p><a href='/poslovi/edit/{{.ID}}'>Change</a></p>
+                        <!-- <p><a href='/poslovi/edit/{{.ID}}'>Change</a></p> NEMA PROMENE POSLE COMPLETE-->
                     </div>
                 </div>
             {{end}}
@@ -75,12 +66,6 @@
 
                         <strong>Status:</strong>
                         <p>{{.Status}}</p>
-
-                        <strong>Average consumption(L/100km):</strong>
-                        <p>{{.Average_consumption}}</p>
-
-                        <strong>Traveled distance(km):</strong>
-                        <p>{{.Km_traveled}}</p>
                     </div>
                 </div>
             {{end}}
@@ -104,11 +89,6 @@
                         <strong>Status:</strong>
                         <p>{{.Status}}</p>
 
-                        <strong>Traveled distance(km):</strong>
-                        <p>{{.Km_traveled}}</p>
-
-                        <strong>Average consumption(L/100km):</strong>
-                        <p>{{.Average_consumption}}</p>
                     </div>
                 </div>
             {{end}}

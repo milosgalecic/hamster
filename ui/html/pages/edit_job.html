@@ -1,8 +1,9 @@
-{{define "title"}}Change job information{{end}}
+{{define "title"}}ChangeJobInformation{{end}}
 
 {{define "main"}}
 {{range .JobDisplays}}
 <form action='/poslovi/edit/{{.Job.ID}}' method='POST'>
+
     <div>
         <label>Job description:</label>
         <input type='text' name='description' required value="{{.Job.Description}}">
@@ -14,6 +15,7 @@
             {{range $id, $name := .DriverIdMap}}
                 <option value="{{$id}}">{{$name}}</option>
             {{end}}
+            <option value="{{.Job.Driver_id}}" selected>{{.DriverName}}</option>
         </select>
     </div>
     
@@ -23,17 +25,18 @@
             {{range $id, $licensePlate := .TruckIdMap}}
                 <option value="{{$id}}">{{$licensePlate}}</option>
             {{end}}
+            <option value="{{.Job.Truck_id}}" selected>{{.TruckLicensePlate}}</option>
         </select>
     </div>
 
     <div>
-        <label>Scheduled departure date:</label>
-        <input type='datetime-local' name='scheduled_date' required value="{{.Job.Scheduled_date}}">
+        <label>Departure date:</label>
+        <input type='datetime-local' name='start_date' required value="{{.FormattedDate}}">
     </div>
 
     <div>
-        <label>Scheduled arrival date:</label>
-        <input type='datetime-local' name='scheduled_arrival_time' value="{{.Job.Scheduled_arrival_time}}">
+        <label>Arrival date:</label>
+        <input type='datetime-local' name='end_date' value="{{.FormattedArrival}}">
     </div>
 
     <div>
@@ -41,40 +44,14 @@
         <select name="status" id="status">
             <option value="pending" {{if eq .Job.Status "pending"}}selected{{end}}>Pending</option>
             <option value="active" {{if eq .Job.Status "active"}}selected{{end}}>Active</option>
-            <option value="completed" {{if eq .Job.Status "completed"}}selected{{end}}>Completed</option>
             <option value="issue" {{if eq .Job.Status "issue"}}selected{{end}}>Issue</option>
             <option value="canceled" {{if eq .Job.Status "canceled"}}selected{{end}}>Canceled</option>
         </select>
     </div>
 
     <div>
-        <label>Distance(km):</label>
-        <input type='number' name='distance' step='1' required value="{{.Job.Distance}}">
-    </div>
-
-    <div>
-        <label>Package size(m):</label>
-        <input type='number' name='package_size' step='1' required value="{{.Job.Package_size}}">
-    </div>
-
-    <div>
-        <label>Package weight(kg):</label>
-        <input type='number' name='package_weight' step='1' value="{{.Job.Package_weight}}">
-    </div>
-
-    <div>
-        <label>Client</label>:</label>
-        <input type='text' name='client_name' value="{{.Job.Client_name}}">
-    </div>
-
-    <div>
-        <label>Departure location:</label>
-        <input type='text' name='start_location' value="{{.Job.Start_location}}">
-    </div>
-
-    <div>
-        <label>Destination:</label>
-        <input type='text' name='destination_location' value="{{.Job.Destination_location}}">
+        <label>Truck starting km:</label>
+        <input type='number' name='starting_km' step='1' required value="{{.Job.TruckStartKm}}">
     </div>
 
     <div>

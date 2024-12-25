@@ -1,27 +1,42 @@
-{{define "title"}}Home{{end}}
+{{define "title"}}ActiveJobs{{end}}
 
 {{define "main"}}
-    <h2>Job history</h2>
-    {{if .Jobs}}
+    <h2>Jobs</h2>
     <table>
         <tr>
-            <th>Job</th>
+            <th></th>
+            <th>Job ID</th>
+            <th>Status</th>
             <th>Driver</th>
             <th>Truck</th>
             <th>Description</th>
-            <th>Departure</th>
+            <th>Departure date</th>
+            <th>Expected arrival date</th>
+            <th></th>
+
         </tr>
-        {{range .Jobs}}
-        <tr>
-            <td><a href='/poslovi/info/{{.ID}}'>{{.ID}}</a></td>
-            <td><a href='/vozaci/info/{{.Driver_id}}'>{{.Driver_id}}</a></td>
-            <td><a href='/kamioni/info/{{.Truck_id}}'>{{.Truck_id}}</a></td>
-            <td>{{.Description}}</td>
-            <td>{{.Scheduled_date}}</td>
-        </tr>
+        {{if .JobDisplays}}
+            {{range .JobDisplays}} <!-- Loop over JobDisplays instead of Jobs -->
+            <tr>
+                {{if not (eq .Job.Status "completed")}}
+                    <td><a href='/poslovi/zavrsi/{{.Job.ID}}'>Complete</a></td>
+                {{else}}
+                    <td></td>
+                {{end}}
+                <td><a href='/poslovi/info/{{.Job.ID}}'>{{.Job.ID}}</a></td>
+                <td>{{.Job.Status}}</td>
+                <td><a href='/vozaci/info/{{.Job.Driver_id}}'>{{.DriverName}}</a></td> 
+                <td><a href='/kamioni/info/{{.Job.Truck_id}}'>{{.TruckLicensePlate}}</a></td> 
+                <td>{{.Job.Description}}</td>
+                <td>{{.FormattedDate}}</td>
+                <td>{{.FormattedArrival}}</td>
+                {{if not (eq .Job.Status "completed")}}
+                    <td><a href='/poslovi/edit/{{.Job.ID}}'>Edit</a></td> 
+                {{else}}
+                    <td></td>
+                {{end}}
+            </tr>
+            {{end}}
         {{end}}
     </table>
-    {{else}}
-        <p>There's nothing to see here... yet!</p>
-    {{end}}
 {{end}}
