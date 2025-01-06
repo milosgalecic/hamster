@@ -1,0 +1,40 @@
+services:
+  server:
+    image: medjutim/hamster:latest
+    restart: always
+    container_name: hamster
+    ports:
+      - "8080:8080"
+    secrets:
+      - db-password
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_PASSWORD_FILE=/run/secrets/db-password
+      - MYSQL_USER=hamster
+      - MYSQL_DB=hamster
+      - MYSQL_PORT=3306
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:latest
+    restart: always
+    user: mysql
+    secrets:
+      - db-password
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./db-init:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_DB=hamster
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-password
+      - MYSQL_PASSWORD_FILE=/run/secrets/db-password
+    expose:
+      - 3306
+
+volumes:
+  db-data:
+
+secrets:
+  db-password:
+    file: db/pass.txt

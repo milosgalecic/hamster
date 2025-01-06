@@ -4,10 +4,12 @@ import (
 	"crypto/tls"
 	"database/sql"
 	"flag"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"hamster/internal/models"
@@ -31,15 +33,30 @@ type application struct {
 
 func main() {
 
-	addr := flag.String("addr", ":4000", "HTTP network address")
-	dsn := flag.String("dsn", "web:pass@/hamster?parseTime=true", "MySQL data source name")
+	addr := flag.String("addr", ":8080", "HTTP network address")
+	//dsn := flag.String("dsn", "web:pass@/hamster?parseTime=true", "MySQL data source name")
+
+	passwordFilePath := os.Getenv("MYSQL_PASSWORD_FILE")
+	passwordBytes, err := os.ReadFile(passwordFilePath)
+	if err != nil {
+		log.Fatalf("Failed to read the password file: %v", err)
+	}
+	password := string(passwordBytes)
+	password = strings.TrimSpace(password)
+
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true",
+		os.Getenv("MYSQL_USER"),
+		password,
+		os.Getenv("MYSQL_HOST"),
+		os.Getenv("MYSQL_DB"),
+	)
 
 	flag.Parse()
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
-
-	db, err := openDB(*dsn)
+	infoLog.Printf("MYSQL path %s", dsn)
+	db, err := openDB(dsn)
 	if err != nil {
 		errorLog.Fatal(err)
 	}
